@@ -88,6 +88,25 @@ var BADGES = [
   { id: 'b100', threshold: 100, name: 'Centurion Api', icon: '👑', desc: '100 hari tanpa padam. Level dedikasi tertinggi.' }
 ];
 
+/* ---- Tier warna api berdasarkan panjang streak ----
+   Urutan harus menaik; threshold 0 selalu ada sebagai tier dasar (oranye). */
+var FLAME_TIERS = [
+  { threshold: 0, name: null },
+  { threshold: 10, name: '🔥 Api Emas' },
+  { threshold: 100, name: '🔥 Api Merah' },
+  { threshold: 250, name: '🔥 Api Biru' },
+  { threshold: 300, name: '🔥 Api Ungu' },
+  { threshold: 345, name: '🔥 Api Magenta' },
+  { threshold: 500, name: '👑 Api Legendaris' }
+];
+function getFlameTier(streak) {
+  var tierIndex = 0;
+  for (var i = 0; i < FLAME_TIERS.length; i++) {
+    if (streak >= FLAME_TIERS[i].threshold) tierIndex = i;
+  }
+  return tierIndex;
+}
+
 var MOTIVATION_LINES = [
   'Mantap, semua tantangan hari ini selesai!',
   'Streak kamu makin membara!',
@@ -247,21 +266,18 @@ function checkBadges(state) {
 function toggleExercise(state, dateKey, exIndex) {
   var entry = ensureDayEntry(state, dateKey);
   if (entry.freezeUsedManually) return { completedNow: false };
-  entry.exercises[exIndex].done = !entry.exercises[exIndex].done;
+  var ex = entry.exercises[exIndex];
+  if (ex.done) return { completedNow: false }; // sudah dicentang — tidak bisa dibatalkan
+  ex.done = true;
   var allDone = entry.exercises.every(function (e) { return e.done; });
-  var wasCompleted = entry.status === 'completed';
   var result = { completedNow: false };
-  if (allDone && !wasCompleted) {
+  if (allDone) {
     entry.status = 'completed';
     entry.completedAt = Date.now();
     state.streak.current += 1;
     if (state.streak.current > state.streak.longest) state.streak.longest = state.streak.current;
     result.completedNow = true;
     result.newBadges = checkBadges(state);
-  } else if (!allDone && wasCompleted) {
-    entry.status = 'pending';
-    entry.completedAt = null;
-    state.streak.current = Math.max(0, state.streak.current - 1);
   }
   saveState(state);
   return result;
@@ -325,7 +341,7 @@ function reconcilePastDays(state) {
 var el = {};
 function cacheDom() {
   [
-    'streakNumber', 'streakFlameWrap', 'freezeCount', 'freezePill',
+    'streakNumber', 'streakFlameWrap', 'streakHero', 'streakTierLabel', 'freezeCount', 'freezePill',
     'todayDate', 'todayCategory', 'ringFill', 'progressRingLabel',
     'challengeList', 'restNote', 'useFreezeBtn', 'completeBanner', 'completeBannerTitle',
     'monthLabel', 'calGrid', 'monthPrevBtn', 'monthNextBtn',
@@ -343,9 +359,10 @@ function cacheDom() {
 /* ===================== rendering: home ===================== */
 function challengeCardHTML(ex, i, entry) {
   var unitLabel = ex.unit === 'sec' ? 'detik' : (ex.perLeg ? 'x/kaki' : 'x');
-  var locked = entry.freezeUsedManually;
-  return '<div class="challenge-card ' + (ex.done ? 'done' : '') + '">' +
-    '<button class="challenge-check" data-idx="' + i + '" ' + (locked ? 'disabled' : '') + ' aria-label="Tandai ' + escapeHtml(ex.name) + ' selesai">' + (ex.done ? '✓' : '') + '</button>' +
+  var locked = entry.freezeUsedManually || ex.done;
+  var label = ex.done ? ('Sudah ditandai selesai, tidak bisa dibatalkan') : ('Tandai ' + escapeHtml(ex.name) + ' selesai');
+  return '<div class="challenge-card ' + (ex.done ? 'done' : '') + '" style="--card-i:' + i + '">' +
+    '<button class="challenge-check" data-idx="' + i + '" ' + (locked ? 'disabled' : '') + ' aria-label="' + label + '">' + (ex.done ? '✓' : '') + '</button>' +
     '<div class="challenge-info">' +
     '<div class="challenge-name">' + escapeHtml(ex.name) + '</div>' +
     '<div class="challenge-target">' + ex.target + ' ' + unitLabel + '</div>' +
@@ -359,6 +376,16 @@ function renderHome() {
 
   el.streakNumber.textContent = STATE.streak.current;
   el.freezeCount.textContent = STATE.streak.freezesLeft;
+
+  var tierIndex = getFlameTier(STATE.streak.current);
+  var tier = FLAME_TIERS[tierIndex];
+  el.streakHero.setAttribute('data-tier', tierIndex);
+  if (tier.name) {
+    el.streakTierLabel.textContent = tier.name;
+    el.streakTierLabel.hidden = false;
+  } else {
+    el.streakTierLabel.hidden = true;
+  }
 
   var d = new Date();
   el.todayDate.textContent = DAY_NAMES_ID[d.getDay()] + ', ' + d.getDate() + ' ' + MONTH_NAMES_ID[d.getMonth()];
@@ -700,6 +727,14 @@ function wireModal(overlayEl, closeBtnEl) {
   closeBtnEl.addEventListener('click', function () { overlayEl.hidden = true; });
   overlayEl.addEventListener('click', function (e) { if (e.target === overlayEl) overlayEl.hidden = true; });
 }
+function wireEscapeCloseModals() {
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    [el.dayModalOverlay, el.shareModalOverlay, el.badgeModalOverlay].forEach(function (overlay) {
+      if (overlay && !overlay.hidden) overlay.hidden = true;
+    });
+  });
+}
 
 /* ===================== event wiring ===================== */
 function wireEvents() {
@@ -884,6 +919,7 @@ function wireEvents() {
   wireModal(el.dayModalOverlay, el.dayModalClose);
   wireModal(el.shareModalOverlay, el.shareModalClose);
   wireModal(el.badgeModalOverlay, el.badgeModalClose);
+  wireEscapeCloseModals();
 }
 
 /* ===================== boot ===================== */
