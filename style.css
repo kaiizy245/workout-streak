@@ -28,6 +28,13 @@
 }
 
 *{box-sizing:border-box;}
+/* Hard reset for the [hidden] attribute: several components below set
+   display:flex at the class level (.modal-overlay, .complete-banner),
+   which otherwise wins over the browser's default [hidden] rule when
+   this file is opened standalone (outside the artifact host, which
+   injects its own !important reset). Keeping it explicit here makes
+   hidden toggling correct in both contexts. */
+[hidden]{display:none !important;}
 body{
   background:var(--bg);
   color:var(--fg);
