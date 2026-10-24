@@ -428,6 +428,25 @@ body::before{
 .badge-tile.locked .badge-icon{filter:grayscale(1);}
 .badge-days{font-family:var(--font-mono);font-size:11px;color:var(--fg-muted);font-weight:600;}
 
+/* ===================== PROFILE ===================== */
+.profile-card{align-items:center;text-align:center;}
+.profile-avatar{
+  width:72px;height:72px;border-radius:50%;
+  object-fit:cover;
+  background:var(--bg-elevated);
+  border:2px solid var(--border-strong);
+  margin:0 auto 4px;
+}
+.profile-avatar-placeholder{
+  display:flex;align-items:center;justify-content:center;
+  color:var(--fg-faint);
+}
+.profile-name{font-family:var(--font-display);font-weight:700;font-size:16px;margin-top:2px;}
+.profile-email{margin-top:2px;}
+.profile-signout{margin-top:6px;}
+.gsi-wrap{display:flex;justify-content:center;margin-top:8px;min-height:40px;}
+#googleSignInNote{margin-top:2px;}
+
 /* ===================== SETTINGS ===================== */
 .settings-card{
   background:var(--bg-card);border:1px solid var(--border);border-radius:14px;
