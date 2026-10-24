@@ -7,6 +7,18 @@
 
 var STORAGE_KEY = 'wds_state_v1';
 
+/* ---- Login Google (Google Identity Services) ----
+   WAJIB diisi sendiri: buat OAuth Client ID di Google Cloud Console
+   (console.cloud.google.com → APIs & Services → Credentials → Create
+   Credentials → OAuth client ID → Web application), lalu daftarkan
+   origin tempat halaman ini di-hosting di kolom "Authorized JavaScript
+   origins" (harus persis sama, termasuk https:// dan tanpa trailing
+   slash). Tanpa langkah itu Google akan menolak permintaan login.
+   Login ini hanya menampilkan nama/foto/email dari akun Google di
+   kartu profil — TIDAK menyinkronkan data streak antar perangkat.
+   Semua progres tetap tersimpan lokal (localStorage) di browser ini saja. */
+var GOOGLE_CLIENT_ID = 'GANTI_DENGAN_CLIENT_ID_ANDA.apps.googleusercontent.com';
+
 var DAY_NAMES_ID = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 var MONTH_NAMES_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 var MONTH_SHORT_ID = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
@@ -965,4 +977,3 @@ document.addEventListener('DOMContentLoaded', function () {
     start((window.claude && window.claude.hot && window.claude.hot.data) || {});
   }
 });
-
