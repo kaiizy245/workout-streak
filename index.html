@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <link rel="stylesheet" href="style.css">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -130,6 +131,31 @@
         <span class="stat-label">Total waktu latihan</span>
       </div>
     </div>
+  </main>
+
+  <!-- ===== PROFILE VIEW ===== -->
+  <main class="view" id="view-profile" data-view="profile" hidden>
+    <div class="section-head"><h1>Profil</h1></div>
+
+    <div class="settings-card profile-card">
+      <!-- Belum masuk -->
+      <div id="profileSignedOut">
+        <div class="profile-avatar profile-avatar-placeholder" aria-hidden="true">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <p class="muted-small">Masuk dengan Google supaya nama &amp; foto profilmu tampil di sini bersama koleksi lencana kamu.</p>
+        <div id="googleSignInBtn" class="gsi-wrap"></div>
+        <p class="muted-small" id="googleSignInNote"></p>
+      </div>
+
+      <!-- Sudah masuk -->
+      <div id="profileSignedIn" hidden>
+        <img id="profileAvatarImg" class="profile-avatar" referrerpolicy="no-referrer" alt="">
+        <div class="profile-name" id="profileName"></div>
+        <div class="profile-email muted-small" id="profileEmail"></div>
+        <button class="btn btn-ghost btn-sm profile-signout" id="signOutBtn">Keluar</button>
+      </div>
+    </div>
 
     <div class="section-head sub">
       <h2>Lencana</h2>
@@ -208,6 +234,10 @@
     <button class="nav-btn" data-nav="stats">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="20" x2="5" y2="12"/><line x1="12" y1="20" x2="12" y2="6"/><line x1="19" y1="20" x2="19" y2="15"/></svg>
       <span>Statistik</span>
+    </button>
+    <button class="nav-btn" data-nav="profile">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Profil</span>
     </button>
     <button class="nav-btn" data-nav="settings">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 13a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V19a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H4a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H10a1.7 1.7 0 0 0 1-1.5V4a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V10a1.7 1.7 0 0 0 1.5 1H20a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
