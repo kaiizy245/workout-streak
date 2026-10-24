@@ -1,9 +1,17 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d0d0d">
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>Workout Daily Streak</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
 <div class="app">
 
@@ -23,12 +31,13 @@
   <!-- ===== HOME VIEW ===== -->
   <main class="view" id="view-home" data-view="home">
 
-    <section class="streak-hero">
+    <section class="streak-hero" id="streakHero" data-tier="0">
       <div class="streak-flame-wrap" id="streakFlameWrap">
         <span class="streak-flame" id="streakFlameIcon">🔥</span>
         <span class="streak-number" id="streakNumber">0</span>
       </div>
       <div class="streak-label">hari beruntun</div>
+      <div class="streak-tier-label" id="streakTierLabel" hidden></div>
       <div class="freeze-pill" id="freezePill">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><line x1="4.9" y1="6.5" x2="19.1" y2="17.5"/><line x1="19.1" y1="6.5" x2="4.9" y2="17.5"/></svg>
         <span id="freezeCount">1</span> freeze tersisa
@@ -51,6 +60,8 @@
       </div>
 
       <div class="challenge-list" id="challengeList"><!-- cards injected --></div>
+
+      <p class="muted-small challenge-hint">Centang bersifat permanen — pastikan latihan sudah benar-benar selesai sebelum menandainya. ✓</p>
 
       <div class="rest-note" id="restNote" hidden>
         Hari ini jadwal pemulihan. Opsional, tapi kalau diselesaikan tetap dicatat dan streak kamu jalan terus. 🧘
@@ -212,6 +223,20 @@
     </div>
   </div>
 
+  <!-- ===== SHARE MODAL ===== -->
+  <div class="modal-overlay" id="shareModalOverlay" hidden>
+    <div class="modal" id="shareModal">
+      <button class="modal-close" id="shareModalClose" aria-label="Tutup">✕</button>
+      <h2 class="modal-title">Bagikan streak</h2>
+      <canvas id="shareCanvas" width="600" height="750" class="share-canvas"></canvas>
+      <p class="muted-small">Tekan lama atau klik kanan gambar untuk menyimpan, atau salin ke clipboard.</p>
+      <div class="settings-actions">
+        <button class="btn btn-primary" id="copyShareBtn">Salin gambar</button>
+      </div>
+      <p class="muted-small" id="shareCopyStatus"></p>
+    </div>
+  </div>
+
   <!-- ===== BADGE DETAIL MODAL ===== -->
   <div class="modal-overlay" id="badgeModalOverlay" hidden>
     <div class="modal" id="badgeModal">
@@ -221,10 +246,12 @@
   </div>
 
   <!-- ===== TOAST ===== -->
-  <div class="toast" id="toast" hidden></div>
+  <div class="toast" id="toast" hidden aria-live="polite"></div>
 
 </div>
 
 <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
 
 <script src="script.js"></script>
+</body>
+</html>
